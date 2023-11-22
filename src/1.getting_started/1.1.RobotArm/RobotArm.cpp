@@ -37,6 +37,8 @@ int LeftButtonDown = 0;    // MOUSE STUFF
 int RightButtonDown = 0;	// MOUSE STUFF
 int RobotControl = 0;
 int spaceBarPressed = 0;
+bool angular = false;
+bool angularKeyPressed = false;
 
 // settings
 const unsigned int SCR_WIDTH = 768;
@@ -222,6 +224,7 @@ int main()
 		PhongShader->setMat4("view", camera.GetViewMatrix());
 		PhongShader->setVec3("viewPos", camera.Position);
 		PhongShader->setVec3("lightPos", camera.Position);
+		//PhongShader->setInt("angular", angular);
 
 		FloorShader->use();
 		FloorShader->setMat4("projection", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f));
@@ -325,14 +328,21 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 	else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS && spaceBarPressed == 1)
 		spaceBarPressed = 0;
 	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, 5.0*deltaTime);
+		camera.ProcessKeyboard(FORWARD, deltaTime);
 	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, 5.0 * deltaTime);
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
 	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, 5.0 * deltaTime);
+		camera.ProcessKeyboard(LEFT, deltaTime);
 	else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, 5.0 * deltaTime);
-	//deltaTime의 체감속도가 느려 5를 곱하였음
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+	else if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS && !angularKeyPressed)
+	{
+		angular = !angular;
+		angularKeyPressed = true;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS && !angularKeyPressed)
+		angularKeyPressed = false;
+	
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
